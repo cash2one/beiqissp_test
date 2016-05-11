@@ -61,8 +61,10 @@ def get_album(cls):
 
 def get_list():
     cls_ls = get_cls()
+    print cls_ls
     select_cls = random.choice(cls_ls)['cls']
     album_ls = get_album(select_cls)
+    print album_ls
     select_album = random.choice(album_ls)['album']
 
     url = 'http://{ip}:8300/audio/list?cls={cls}&album={album}'.format(ip=SERVER_IP, cls=urllib2.quote(select_cls.encode('utf-8')), album=urllib2.quote(select_album.encode('utf-8')))
