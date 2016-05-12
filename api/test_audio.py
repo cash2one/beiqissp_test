@@ -50,12 +50,14 @@ mqtt_thread.start()
 def get_cls():
     url = 'http://{ip}:8300/audio/cls'.format(ip=SERVER_IP)
     url = append_url_sign_tk(url, gen_tk(), API_SECRET)
+    print url
     return json.loads(urllib2.urlopen(urllib2.Request(url)).read())
 
 
 def get_album(cls):
     url = "http://{ip}:8300/audio/album?cls={cls}".format(ip=SERVER_IP, cls=urllib2.quote(cls.encode('utf-8')))
     url = append_url_sign_tk(url, gen_tk(), API_SECRET)
+    print url
     return json.loads(urllib2.urlopen(urllib2.Request(url)).read())
 
 
@@ -69,7 +71,7 @@ def get_list():
 
     url = 'http://{ip}:8300/audio/list?cls={cls}&album={album}'.format(ip=SERVER_IP, cls=urllib2.quote(select_cls.encode('utf-8')), album=urllib2.quote(select_album.encode('utf-8')))
     url = append_url_sign_tk(url, gen_tk(), API_SECRET)
-
+    print url
     return json.loads(urllib2.urlopen(urllib2.Request(url)).read())
 
 class APIAudioAudioClsTest(unittest.TestCase):
@@ -99,6 +101,7 @@ class APIAudioSend2DevTest(AsyncTestCase):
             name=urllib2.quote(select_audio['name']),
             ref=urllib2.quote(select_audio['ref']))
         url = append_url_sign_tk(url, gen_tk(), API_SECRET)
+        print url
 
         urllib2.urlopen(urllib2.Request(url)).read()
 

@@ -13,6 +13,7 @@ import urllib
 from py_util.filetoken import gen_file_tk
 import sys
 print sys.path
+import json
 
 from beiqissp_test.setting import SERVER_IP, TEST_USER_NAME
 http_client = HTTPClient()
@@ -30,7 +31,21 @@ up_args = {'tk': tk, 'src': file_type, 'by': TEST_USER_NAME, 'usage': 'share'}
 
 
 mp3file= r"C:\Users\151117a\Desktop\资源\Sleep Away.mp3".decode('utf8')
-file_object = open(mp3file)
+print mp3file
+file_object = open(mp3file, 'rb')
 
-resp = http_client.fetch(HTTPRequest(up_file_url + urllib.urlencode(up_args), method='POST', body=file_object.read()))
-print resp.body
+data = file_object.read()
+file_object.close()
+print len(data)
+
+resp = http_client.fetch(HTTPRequest(up_file_url + urllib.urlencode(up_args), method='POST', body=data))
+print resp
+js_resp = json.loads(resp.body)
+
+
+acc = "18610060484@jiashu.com"
+tk = gen_file_tk(acc, fn, 0, 0)
+down_file_url = 'http://{ip}:8106/down?'.format(ip=SERVER_IP)
+pic_url = down_file_url + urllib.urlencode({'tk': tk, 'r': js_resp['r']})
+print pic_url
+
