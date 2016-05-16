@@ -54,8 +54,8 @@ def get_cls():
     return json.loads(urllib2.urlopen(urllib2.Request(url)).read())
 
 
-def get_album(cls):
-    url = "http://{ip}:8300/audio/album?cls={cls}".format(ip=SERVER_IP, cls=urllib2.quote(cls.encode('utf-8')))
+def get_album(cls_id):
+    url = "http://{ip}:8300/audio/album?cls_id={cls_id}".format(ip=SERVER_IP, cls_id=urllib2.quote(cls_id.encode('utf-8')))
     url = append_url_sign_tk(url, gen_tk(), API_SECRET)
     print url
     return json.loads(urllib2.urlopen(urllib2.Request(url)).read())
@@ -64,12 +64,12 @@ def get_album(cls):
 def get_list():
     cls_ls = get_cls()
     print cls_ls
-    select_cls = random.choice(cls_ls)['cls']
+    select_cls = random.choice(cls_ls)['id']
     album_ls = get_album(select_cls)
     print album_ls
-    select_album = random.choice(album_ls)['album']
+    select_album = random.choice(album_ls)['id']
 
-    url = 'http://{ip}:8300/audio/list?cls={cls}&album={album}'.format(ip=SERVER_IP, cls=urllib2.quote(select_cls.encode('utf-8')), album=urllib2.quote(select_album.encode('utf-8')))
+    url = 'http://{ip}:8300/audio/list?album_id={album_id}'.format(ip=SERVER_IP, album_id=select_album)
     url = append_url_sign_tk(url, gen_tk(), API_SECRET)
     print url
     return json.loads(urllib2.urlopen(urllib2.Request(url)).read())
@@ -82,7 +82,8 @@ class APIAudioAudioAlbumTest(unittest.TestCase):
     def test_audio_list(self):
         cls_ls = get_cls()
         select_cls = random.choice(cls_ls)
-        self.assertTrue(get_album(select_cls['cls']))
+        print "select_cls,",select_cls
+        self.assertTrue(get_album(select_cls['id']))
 
 class APIAudioAudioListTest(unittest.TestCase):
     def test_audio_list(self):
@@ -91,6 +92,7 @@ class APIAudioAudioListTest(unittest.TestCase):
 class APIAudioSend2DevTest(AsyncTestCase):
     def test_pub_2_dev(self):
         audio_ls = get_list()
+        print audio_ls
         select_audio = random.choice(audio_ls)
 
         sn ="PNZHANCHENJIN"
